@@ -4,7 +4,7 @@ export const todoList = createSlice({
   name: "todoList",
   initialState: {
     todos: [],
-    name: 'faza',
+    name: "faza",
     value: 69,
   },
   reducers: {
@@ -12,13 +12,23 @@ export const todoList = createSlice({
       state.todos = action.payload;
     },
     toggleCompletion: (state, action) => {
-      let temp = state.todos
-      temp[action.payload].completed = !temp[action.payload].completed
-      state.todos = temp
-      localStorage.setItem('LocalTodoLists', JSON.stringify(state.todos))
-    }
+      let temp = state.todos;
+      temp[action.payload].completed = !temp[action.payload].completed;
+      state.todos = temp;
+      localStorage.setItem("LocalTodoLists", JSON.stringify(state.todos));
+    },
+    addATodo: (state, action) => {
+      let temp = state.todos;
+      
+      temp.push({
+        todo: action.payload,
+        completed: false,
+      });
+      state.todos = temp;
+      localStorage.setItem("LocalTodoLists", JSON.stringify(state.todos));
+    },
   },
 });
 
-export const { setTodos, toggleCompletion } = todoList.actions;
-export default todoList.reducer
+export const { setTodos, toggleCompletion, addATodo } = todoList.actions;
+export default todoList.reducer;
