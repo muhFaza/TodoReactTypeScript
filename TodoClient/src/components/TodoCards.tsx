@@ -13,10 +13,11 @@ const TodoCards: React.FC<TodoCardsProps> = () => {
     clicked: false,
   })
   const todos = useSelector((state) => state.todoList.todos);
+  const enableDeleteMode = useSelector(state => state.todoList.enableDeleteMode);
   const dispatch = useDispatch();
 
-  function toggle(idx) {
-    dispatch(toggleCompletion(idx));
+  function toggle(id) {
+    dispatch(toggleCompletion(id));
   }
 
   function toggleMaxLines(e) {
@@ -31,21 +32,27 @@ const TodoCards: React.FC<TodoCardsProps> = () => {
 
   }
 
+  function deleteTodo (e, idx) {
+    
+  }
+
   return (
     <>
       {todos.map((el, index) => (
-        <div onContextMenu={(e) => handleContextMenu(e, index)} className="card p-2 d-flex flex-row justify-content-between align-items-center my-3">
-          <div className="">
-            <div onClick={toggleMaxLines} className="text-start me-3 max-lines">
-              {el.todo}
+        <div className="card my-3">
+          <div onContextMenu={(e) => handleContextMenu(e, index)} className="p-2 d-flex flex-row justify-content-between align-items-center">
+            <div className="">
+              <div onClick={toggleMaxLines} className="text-start me-3 max-lines">
+                {el.todo}
+              </div>
+            </div>
+            <div className="">
+              <Toggle checked={el.completed} onChange={() => toggle(el.id)} />
             </div>
           </div>
-          <div className="">
-            <Toggle checked={el.completed} onChange={() => toggle(index)} />
-          </div>
-          {/* {data.completed && (<div>
-          <button className="btn btn-sm btn-danger">delete</button>
-        </div>)} */}
+            {enableDeleteMode && (<div>
+            <button className="btn btn-sm btn-danger w-50 mb-2">delete</button>
+          </div>)}
         </div>
       ))}
     </>

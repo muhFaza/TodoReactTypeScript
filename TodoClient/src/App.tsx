@@ -4,7 +4,7 @@ import axios from "axios";
 import "./App.css";
 import TodoCards from "./components/TodoCards";
 import { useDispatch, useSelector } from "react-redux";
-import { setTodos, addATodo } from "./store/todolist";
+import { setTodos, addATodo, toggleDeleteMode } from "./store/todolist";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -12,6 +12,9 @@ function App() {
   const [addTodosInput, setAddTodosInput] = useState("");
   const [formValidation, setFormValidation] = useState(0);
   const todos = useSelector((state) => state.todoList.todos);
+  const enableDeleteMode = useSelector(
+    (state) => state.todoList.enableDeleteMode
+  );
 
   const dispatch = useDispatch();
 
@@ -75,6 +78,15 @@ function App() {
     });
   }
 
+  // function toggleDeleteMode () {
+  //   setEnableDeleteMode(!enableDeleteMode)
+  // }
+
+  // TESTING useEffect
+  useEffect(() => {
+    console.log(enableDeleteMode);
+  }, [enableDeleteMode]);
+
   return (
     <>
       <ToastContainer
@@ -99,6 +111,8 @@ function App() {
           Reset
         </button>
         <br />
+
+        {/* FORM CREATE NEW TODO */}
         <form className="" action="" onSubmit={() => addTodos(event)}>
           <label htmlFor="todoText" className="text-start w-100">
             New Todo:
@@ -106,7 +120,7 @@ function App() {
           <input
             value={addTodosInput}
             onChange={() => setAddTodosInput(event?.target.value)}
-            id="todotext"
+            id="todoText"
             className={
               "form-control form-control-sm" +
               (formValidation ? " is-invalid" : "")
@@ -120,22 +134,28 @@ function App() {
       </div>
       <div className="text-start">
         <button
-          className="btn btn-sm btn-primary mx-2"
+          className="btn btn-sm btn-primary mx-1"
           onClick={() => filterCompletion(0)}
         >
           All
         </button>
         <button
-          className="btn btn-sm btn-primary mx-2"
+          className="btn btn-sm btn-primary mx-1"
           onClick={() => filterCompletion(1)}
         >
           Done
         </button>
         <button
-          className="btn btn-sm btn-primary mx-2"
+          className="btn btn-sm btn-primary mx-1"
           onClick={() => filterCompletion(2)}
         >
           Not Done
+        </button>
+        <button
+          className={"btn btn-sm mx-1" + (enableDeleteMode ? ' btn-secondary' : ' btn-danger')}
+          onClick={() => dispatch(toggleDeleteMode())}
+        >
+          {enableDeleteMode ? "Cancel" : "Delete"}
         </button>
       </div>
       <TodoCards />
