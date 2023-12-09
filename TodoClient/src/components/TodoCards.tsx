@@ -1,7 +1,7 @@
 import "react-toggle/style.css";
 import Toggle from "react-toggle";
 import { useSelector, useDispatch } from "react-redux";
-import { setTodos, toggleCompletion } from "../store/todolist";
+import { setTodos, toggleCompletion, handleDeleteTodo } from "../store/todolist";
 import { useState } from "react";
 import ContextMenu from 'devextreme-react/context-menu';
 
@@ -32,10 +32,6 @@ const TodoCards: React.FC<TodoCardsProps> = () => {
 
   }
 
-  function deleteTodo (e, idx) {
-    
-  }
-
   return (
     <>
       {todos.map((el, index) => (
@@ -46,13 +42,12 @@ const TodoCards: React.FC<TodoCardsProps> = () => {
                 {el.todo}
               </div>
             </div>
-            <div className="">
-              <Toggle checked={el.completed} onChange={() => toggle(el.id)} />
+            <div className="d-flex align-items-center">
+              {enableDeleteMode ? (
+              <button onClick={() => dispatch(handleDeleteTodo(el.id))} className="btn btn-sm btn-danger">delete</button>
+              ): (<Toggle checked={el.completed} onChange={() => toggle(el.id)} />)}
             </div>
           </div>
-            {enableDeleteMode && (<div>
-            <button className="btn btn-sm btn-danger w-50 mb-2">delete</button>
-          </div>)}
         </div>
       ))}
     </>

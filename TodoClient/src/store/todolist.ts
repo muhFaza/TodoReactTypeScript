@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 
 export const todoList = createSlice({
   name: "todoList",
@@ -33,9 +34,25 @@ export const todoList = createSlice({
     toggleDeleteMode: (state, action) => {
       state.enableDeleteMode = !state.enableDeleteMode;
     },
+    handleDeleteTodo: (state, action) => {
+      let temp = state.todos
+      temp = temp.filter(el => el.id != action.payload)
+      state.todos = temp
+      localStorage.setItem("LocalTodoLists", JSON.stringify(state.todos))
+      toast.error("Todo Deleted!", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
   },
 });
 
-export const { setTodos, toggleCompletion, addATodo, toggleDeleteMode } =
+export const { setTodos, toggleCompletion, addATodo, toggleDeleteMode, handleDeleteTodo } =
   todoList.actions;
 export default todoList.reducer;
