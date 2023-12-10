@@ -44,7 +44,7 @@ const TodoCards: React.FC<TodoCardsProps> = () => {
             </div>
             <div className="d-flex align-items-center">
               {enableDeleteMode ? (
-              <button onClick={() => dispatch(handleDeleteTodo(el.id))} className="btn btn-sm btn-danger">delete</button>
+              <button style={{width: 50, height: 24, padding: 0, fontSize: '14px'}} onClick={() => dispatch(handleDeleteTodo(el.id))} className="btn btn-sm btn-danger">delete</button>
               ): (<Toggle checked={el.completed} onChange={() => toggle(el.id)} />)}
             </div>
           </div>

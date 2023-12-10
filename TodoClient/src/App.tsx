@@ -4,7 +4,7 @@ import axios from "axios";
 import "./App.css";
 import TodoCards from "./components/TodoCards";
 import { useDispatch, useSelector } from "react-redux";
-import { setTodos, addATodo, toggleDeleteMode } from "./store/todolist";
+import { setTodos, addATodo, toggleDeleteMode, filterTodos } from "./store/todolist";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -40,17 +40,8 @@ function App() {
   }, []);
 
   function filterCompletion(code) {
-    // if (code == 1) {
-    //   return setTodoLists((todoLists) =>
-    //     JSON.parse(localStorage.LocalTodoLists).filter((el) => el.completed)
-    //   );
-    // }
-    // if (code == 2) {
-    //   return setTodoLists((todoLists) =>
-    //     JSON.parse(localStorage.LocalTodoLists).filter((el) => !el.completed)
-    //   );
-    // }
-    // return setTodoLists((todoLists) => JSON.parse(localStorage.LocalTodoLists));
+    dispatch(filterTodos(code));
+
   }
 
   function log() {

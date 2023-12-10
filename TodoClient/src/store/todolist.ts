@@ -6,6 +6,7 @@ export const todoList = createSlice({
   initialState: {
     todos: [],
     enableDeleteMode: false,
+    filterState: 0,
   },
   reducers: {
     setTodos: (state, action) => {
@@ -14,31 +15,45 @@ export const todoList = createSlice({
     toggleCompletion: (state, action) => {
       let temp = state.todos;
       temp.map(todo => todo.id === action.payload ? todo.completed = !todo.completed : todo)
+      let tempStorage = JSON.parse(localStorage.getItem("LocalTodoLists"));
+      tempStorage.map(todo => todo.id === action.payload ? todo.completed = !todo.completed : todo)
       state.todos = temp;
-      localStorage.setItem("LocalTodoLists", JSON.stringify(state.todos));
+      localStorage.setItem("LocalTodoLists", JSON.stringify(tempStorage));
+      
     },
     addATodo: (state, action) => {
       let temp = state.todos;
-      let ids = temp.map((todo) => todo.id);
+      let tempStorage = JSON.parse(localStorage.getItem("LocalTodoLists"));
+      let ids = tempStorage.map((todo) => todo.id);
       // find highest id
       let maxId = Math.max(...ids);
 
-      temp.push({
+      if (state.filterState != 1) {
+        temp.push({
+          id: maxId + 1,
+          todo: action.payload,
+          completed: false,
+        });
+        state.todos = temp;
+      }
+
+      tempStorage.push({
         id: maxId + 1,
         todo: action.payload,
         completed: false,
-      });
-      state.todos = temp;
-      localStorage.setItem("LocalTodoLists", JSON.stringify(state.todos));
+      })
+      localStorage.setItem("LocalTodoLists", JSON.stringify(tempStorage));
     },
     toggleDeleteMode: (state, action) => {
       state.enableDeleteMode = !state.enableDeleteMode;
     },
     handleDeleteTodo: (state, action) => {
-      let temp = state.todos
+      let temp = state.todos;
       temp = temp.filter(el => el.id != action.payload)
+      let tempStorage = JSON.parse(localStorage.getItem("LocalTodoLists"));
+      tempStorage = tempStorage.filter(el => el.id != action.payload)
       state.todos = temp
-      localStorage.setItem("LocalTodoLists", JSON.stringify(state.todos))
+      localStorage.setItem("LocalTodoLists", JSON.stringify(tempStorage))
       toast.error("Todo Deleted!", {
         position: "top-right",
         autoClose: 1000,
@@ -49,10 +64,21 @@ export const todoList = createSlice({
         progress: undefined,
         theme: "colored",
       });
+    },
+    filterTodos: (state, action) => {
+      state.filterState = action.payload;
+      let temp = JSON.parse(localStorage.getItem("LocalTodoLists"));
+      if (state.filterState == 0) {
+        state.todos = temp;
+      } else if (state.filterState == 1) {
+        state.todos = temp.filter(todo => todo.completed == true)
+      } else {
+        state.todos = temp.filter(todo => todo.completed == false)
+      }
     }
   },
 });
 
-export const { setTodos, toggleCompletion, addATodo, toggleDeleteMode, handleDeleteTodo } =
+export const { setTodos, toggleCompletion, addATodo, toggleDeleteMode, handleDeleteTodo, filterTodos } =
   todoList.actions;
 export default todoList.reducer;
